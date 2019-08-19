@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bookislife.booklab.persistence.mapper.BookMapper">
+
+    <insert id="insertSelective" parameterType="com.bookislife.booklab.service.dto.BookDto">
+        <selectKey keyProperty="id" order="AFTER" resultType="Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO book
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bookName != null">book_name,</if>
+            <if test="price != null">price,</if>
+            <if test="cover != null">cover,</if>
+            <if test="summary != null">summary,</if>
+            <if test="author != null">author,</if>
+        </trim>
+        VALUES (
+        <trim suffixOverrides=",">
+            <if test="bookName != null">#{bookName},</if>
+            <if test="price != null">#{price},</if>
+            <if test="cover != null">#{cover},</if>
+            <if test="summary != null">#{summary},</if>
+            <if test="author != null">#{author},</if>
+        </trim>
+        )
+    </insert>
+
+    <update id="updateSelective" parameterType="com.bookislife.booklab.persistence.entity.Book">
+        UPDATE book
+        <set>
+            <if test="cond.bookName != null">
+                book_name = #{cond.bookName},
+            </if>
+            <if test="cond.price != null">
+                price = #{cond.price},
+            </if>
+            <if test="cond.cover != null">
+                cover = #{cond.cover},
+            </if>
+            <if test="cond.summary != null">
+                summary = #{cond.summary},
+            </if>
+            <if test="cond.author != null">
+                author = #{cond.author},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectAll" resultType="com.bookislife.booklab.persistence.entity.Book">
+      select
+          id,
+          book_name,
+          author,
+          price,
+          cover,
+          summary
+      from book
+    </select>
+</mapper>
